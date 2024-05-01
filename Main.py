@@ -1,5 +1,7 @@
 from Interfaz import *
 from ttkthemes import ThemedTk
+# vaya al power shell y escriba el comando "pip install ttkthemes"
+
 def main():
     root = ThemedTk(theme="scidblue")
     root.iconbitmap("imagenes/directory_call_telephone_phone_contacts_communication_contact_book_address_icon_210815.ico")

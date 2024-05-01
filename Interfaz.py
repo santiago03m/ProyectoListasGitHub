@@ -1,5 +1,4 @@
 import tkinter as tk
-from tkinter import ttk
 from Contacto import Contacto
 from Libreta import Libreta
 
@@ -75,6 +74,8 @@ class InterfazContactos(tk.Frame):
         if self.libreta:
             for i, contacto in enumerate(self.libreta.libreta):
                 self.lista_contactos.insert(tk.END, f"{i + 1}. {contacto.nombre} - {contacto.numero}")
+                print(self.libreta.libreta)
+                print(f"{i + 1}. {contacto.nombre} - {contacto.numero}")
     
     
     def eliminar_contacto(self):
