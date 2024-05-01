@@ -1,7 +1,10 @@
 from Interfaz import *
+from ttkthemes import ThemedTk
 def main():
-    root = tk.Tk()
+    root = ThemedTk(theme="scidblue")
+    root.iconbitmap("imagenes/directory_call_telephone_phone_contacts_communication_contact_book_address_icon_210815.ico")
     root.geometry("1000x700")
+    root.title("Libreta contactos")
 
     root.grid_rowconfigure(0, weight=1)
     root.grid_columnconfigure(0, weight=1)
