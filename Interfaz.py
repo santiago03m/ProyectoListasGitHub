@@ -21,38 +21,26 @@ class InterfazLogica(tk.Frame):
         
         self.entry_nombre = tk.Entry(frame_agregar, **estilo_widget)
         self.entry_nombre.grid(row=0, column=1, padx=5, pady=5)
-        self.entry_nombre.bind('<Key>', self.validar_nombre)
         
         label_telefono = tk.Label(frame_agregar, text="Teléfono:")
         label_telefono.grid(row=1, column=0, padx=5, pady=5)
         
         self.entry_telefono = tk.Entry(frame_agregar, **estilo_widget)
         self.entry_telefono.grid(row=1, column=1, padx=5, pady=5)
-        self.entry_telefono.bind('<Key>', self.validar_telefono)
+        self.entry_telefono.config(validate="key", validatecommand=(self.register(self.validar_telefono), "%S"))
         
         boton_agregar = tk.Button(frame_agregar, text="Agregar", command=self.agregar_contacto, **estilo_widget)
         boton_agregar.grid(row=2, columnspan=2, padx=5, pady=5)
-    
-    def validar_nombre(self, event):
-        # Obtener el texto actual del campo de entrada
-        texto = self.entry_nombre.get()
 
-        # Si el texto contiene caracteres que no son letras, eliminarlos
-        if not re.match("^[A-Za-z]*$", texto):
-            self.entry_nombre.delete(len(texto) - 1, tk.END)
-
-    def validar_telefono(self, event):
-        # Obtener el texto actual del campo de entrada
-        texto = self.entry_telefono.get()
-
-        # Si el texto contiene caracteres que no son dígitos, eliminarlos
-        if not texto.isdigit():
-            self.entry_telefono.delete(len(texto) - 1, tk.END)
+    def validar_telefono(self, char):
+        if char.isdigit():
+            return True
+        return False
 
     def agregar_contacto(self):
         nombre = self.entry_nombre.get()
         telefono = self.entry_telefono.get()
-        if nombre is not None and telefono is not None:
+        if nombre and telefono != "":
             contacto = Contacto(nombre, telefono)
             self.libreta.guardar_contacto(contacto)
             self.entry_nombre.delete(0, tk.END)
@@ -95,6 +83,11 @@ class InterfazContactos(tk.Frame):
             del self.libreta.libreta[indice]
             self.actualizar_lista_contactos()
 
+    def validar_telefono(self, char):
+        if char.isdigit():
+            return True
+        return False
+
     def modificar_contacto(self):
         seleccionado = self.lista_contactos.curselection()
         if seleccionado:
@@ -113,12 +106,13 @@ class InterfazContactos(tk.Frame):
             label_telefono.grid(row=1, column=0, padx=5, pady=5)
             entry_nuevo_telefono = tk.Entry(ventana_modificar, **estilo_widget)
             entry_nuevo_telefono.grid(row=1, column=1, padx=5, pady=5)
+            entry_nuevo_telefono.config(validate="key", validatecommand=(self.register(self.validar_telefono), "%S"))
 
             boton_guardar = tk.Button(ventana_modificar, text="Guardar", command = lambda: self.guardar_modificacion(indice, entry_nuevo_nombre.get(), entry_nuevo_telefono.get(), ventana_modificar), **estilo_widget)
             boton_guardar.grid(row=2, columnspan=2, padx=5, pady=5)
 
     def guardar_modificacion(self, indice, nuevo_nombre, nuevo_telefono, ventana_modificar):
-        if nuevo_nombre is not None and nuevo_telefono is not None:
+        if nuevo_nombre and nuevo_telefono != "":
             contacto_modificado = self.libreta.libreta[indice]
             contacto_modificado.nombre = nuevo_nombre
             contacto_modificado.numero = nuevo_telefono
