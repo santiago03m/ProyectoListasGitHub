@@ -1,6 +1,7 @@
 import tkinter as tk
 from Contacto import Contacto
 from Libreta import Libreta
+import re
 class InterfazLogica(tk.Frame):
     def __init__(self, interfaz_contactos, libreta: Libreta, master = None):
         super().__init__(master)
@@ -14,29 +15,48 @@ class InterfazLogica(tk.Frame):
         estilo_widget = {"borderwidth": 1, "highlightthickness": 0}
         frame_agregar = tk.Frame(self)
         frame_agregar.pack(padx=10, pady=10)
-
+        
         label_nombre = tk.Label(frame_agregar, text="Nombre:")
         label_nombre.grid(row=0, column=0, padx=5, pady=5)
-
+        
         self.entry_nombre = tk.Entry(frame_agregar, **estilo_widget)
         self.entry_nombre.grid(row=0, column=1, padx=5, pady=5)
-
+        self.entry_nombre.bind('<Key>', self.validar_nombre)
+        
         label_telefono = tk.Label(frame_agregar, text="Teléfono:")
         label_telefono.grid(row=1, column=0, padx=5, pady=5)
-
+        
         self.entry_telefono = tk.Entry(frame_agregar, **estilo_widget)
         self.entry_telefono.grid(row=1, column=1, padx=5, pady=5)
-
+        self.entry_telefono.bind('<Key>', self.validar_telefono)
+        
         boton_agregar = tk.Button(frame_agregar, text="Agregar", command=self.agregar_contacto, **estilo_widget)
         boton_agregar.grid(row=2, columnspan=2, padx=5, pady=5)
+    
+    def validar_nombre(self, event):
+        # Obtener el texto actual del campo de entrada
+        texto = self.entry_nombre.get()
+
+        # Si el texto contiene caracteres que no son letras, eliminarlos
+        if not re.match("^[A-Za-z]*$", texto):
+            self.entry_nombre.delete(len(texto) - 1, tk.END)
+
+    def validar_telefono(self, event):
+        # Obtener el texto actual del campo de entrada
+        texto = self.entry_telefono.get()
+
+        # Si el texto contiene caracteres que no son dígitos, eliminarlos
+        if not texto.isdigit():
+            self.entry_telefono.delete(len(texto) - 1, tk.END)
 
     def agregar_contacto(self):
         nombre = self.entry_nombre.get()
         telefono = self.entry_telefono.get()
-        contacto = Contacto(nombre, telefono)
-        self.libreta.guardar_contacto(contacto)
-        self.entry_nombre.delete(0, tk.END)
-        self.entry_telefono.delete(0, tk.END)
+        if nombre is not None and telefono is not None:
+            contacto = Contacto(nombre, telefono)
+            self.libreta.guardar_contacto(contacto)
+            self.entry_nombre.delete(0, tk.END)
+            self.entry_telefono.delete(0, tk.END)
         self.interfaz_contactos.actualizar_lista_contactos()
 
 
@@ -52,13 +72,13 @@ class InterfazContactos(tk.Frame):
         estilo_widget = {"borderwidth": 1, "highlightthickness": 0}
         self.lista_contactos = tk.Listbox(self)
         self.lista_contactos.pack(side="top", fill="both", expand=True)
-
+        
         self.boton_modificar = tk.Button(self, text="Modificar", command=self.modificar_contacto, **estilo_widget)
         self.boton_modificar.pack(side="bottom", pady=5)
         
         self.boton_modificar = tk.Button(self, text="Eliminar", command=self.eliminar_contacto, **estilo_widget)
         self.boton_modificar.pack(side="bottom", pady=5)
-
+        
         self.actualizar_lista_contactos()
 
     def actualizar_lista_contactos(self):
@@ -98,8 +118,9 @@ class InterfazContactos(tk.Frame):
             boton_guardar.grid(row=2, columnspan=2, padx=5, pady=5)
 
     def guardar_modificacion(self, indice, nuevo_nombre, nuevo_telefono, ventana_modificar):
-        contacto_modificado = self.libreta.libreta[indice]
-        contacto_modificado.nombre = nuevo_nombre
-        contacto_modificado.numero = nuevo_telefono
-        ventana_modificar.destroy()
-        self.actualizar_lista_contactos()
+        if nuevo_nombre is not None and nuevo_telefono is not None:
+            contacto_modificado = self.libreta.libreta[indice]
+            contacto_modificado.nombre = nuevo_nombre
+            contacto_modificado.numero = nuevo_telefono
+            ventana_modificar.destroy()
+            self.actualizar_lista_contactos()
