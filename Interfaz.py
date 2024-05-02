@@ -98,6 +98,7 @@ class InterfazContactos(tk.Frame):
             ventana_modificar = tk.Toplevel(self)
             ventana_modificar.title("Modificar contacto")
             ventana_modificar.geometry("400x400")
+            ventana_modificar.iconbitmap("imagenes/directory_call_telephone_phone_contacts_communication_contact_book_address_icon_210815.ico")
             
             label_nombre = tk.Label(ventana_modificar, text="Nuevo nombre:")
             label_nombre.grid(row=0, column=0, padx=5, pady=5)
