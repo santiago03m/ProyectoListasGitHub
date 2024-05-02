@@ -2,7 +2,7 @@ from Interfaz import *
 import tkinter as tk
 
 def main():
-    root = tk(theme="scidblue")
+    root = tk.Tk()
     root.iconbitmap("imagenes/directory_call_telephone_phone_contacts_communication_contact_book_address_icon_210815.ico")
     root.geometry("500x350")
     root.title("Libreta contactos")
