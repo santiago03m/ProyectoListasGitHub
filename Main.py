@@ -1,9 +1,8 @@
 from Interfaz import *
-from ttkthemes import ThemedTk
-# vaya al power shell y escriba el comando "pip install ttkthemes"
+import tkinter as tk
 
 def main():
-    root = ThemedTk(theme="scidblue")
+    root = tk.Tk()
     root.iconbitmap("imagenes/directory_call_telephone_phone_contacts_communication_contact_book_address_icon_210815.ico")
     root.geometry("500x350")
     root.title("Libreta contactos")
